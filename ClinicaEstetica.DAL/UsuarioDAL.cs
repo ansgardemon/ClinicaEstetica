@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using ClinicaEstetica.DTO;
 
@@ -6,6 +7,9 @@ namespace ClinicaEstetica.DAL
 {
     public class UsuarioDAL : Conexao
     {
+
+
+        private object cmd;
         public UsuarioDTO Autenticar(string Email, string Senha)
         {
 			try
@@ -39,6 +43,74 @@ namespace ClinicaEstetica.DAL
             {
                 Desconectar();
             }
+        }
+
+
+
+        public List<UsuarioDTO> ListarTodos()
+        {
+            List<UsuarioDTO> usuarios = new List<UsuarioDTO>();
+
+
+                try
+            {
+                Conectar();
+                string sql = "SELECT * FROM Usuario ORDER BY Nome;";
+                using (SqlCommand cmd = new SqlCommand(sql, conexao))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        usuarios.Add(new UsuarioDTO()
+                        {
+                            IdUsuario = (int)reader["IdUsuario"],
+                            IdTipoUsuario = (int)reader["IdTipoUsuario"],
+                            Nome = reader["Nome"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            Senha = reader["Senha"].ToString(),
+                            Status = (bool)reader["Status"]
+
+                        });
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+
+                throw new Exception($"Erro: {erro.Message}");
+            }
+
+            return usuarios;
+        }
+
+
+
+        public List<TipoUsuarioDTO> GetTipos() 
+        {
+            try
+            {
+                Conectar();
+                string sql = "SELECT * FROM TipoUsuario;";
+                command = new SqlCommand(sql);
+                dataReader = command.ExecuteReader();
+                List<TipoUsuarioDTO> lista = new List<TipoUsuarioDTO>();
+
+
+                while (dataReader.Read())
+                {
+                    TipoUsuarioDTO tipoUsuario = new TipoUsuarioDTO();
+                    tipoUsuario.IdTipoUsuario = Convert.ToInt32(dataReader["IdTipoUsuario"]);
+                    tipoUsuario.Nome = dataReader["IdTipoUsuario"].ToString();
+                    lista.Add(tipoUsuario);
+                }
+                return lista;
+            }
+            catch (Exception erro)
+            {
+
+                throw new Exception($"Erro: {erro.Message}");
+            }
+        
         }
     }
 }
