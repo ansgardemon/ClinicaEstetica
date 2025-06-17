@@ -5,9 +5,9 @@ using ClinicaEstetica.DTO;
 
 namespace ClinicaEstetica
 {
-    public partial class Form1 : Form
+    public partial class frmLogin : Form
     {
-        public Form1()
+        public frmLogin()
         {
             InitializeComponent();
         }
@@ -38,6 +38,11 @@ namespace ClinicaEstetica
                 MessageBox.Show($"Não foi possível efetuar o login. Tente novamente!", "Erro!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
+        }
+
+        private void FormLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
