@@ -91,7 +91,7 @@ namespace ClinicaEstetica.DAL
             {
                 Conectar();
                 string sql = "SELECT * FROM TipoUsuario;";
-                command = new SqlCommand(sql);
+                command = new SqlCommand(sql, conexao);
                 dataReader = command.ExecuteReader();
                 List<TipoUsuarioDTO> lista = new List<TipoUsuarioDTO>();
 
@@ -100,7 +100,7 @@ namespace ClinicaEstetica.DAL
                 {
                     TipoUsuarioDTO tipoUsuario = new TipoUsuarioDTO();
                     tipoUsuario.IdTipoUsuario = Convert.ToInt32(dataReader["IdTipoUsuario"]);
-                    tipoUsuario.Nome = dataReader["IdTipoUsuario"].ToString();
+                    tipoUsuario.Nome = dataReader["Nome"].ToString();
                     lista.Add(tipoUsuario);
                 }
                 return lista;
@@ -156,7 +156,7 @@ namespace ClinicaEstetica.DAL
             try
             {
                 Conectar();
-                string sql = "UPDATE Usuario SET IdTipoUsuario=@idTipo, Nome=@nome, Email=@nome, Senha=@senha, Status=@status WHERE IdUsuario=@idUsuario";
+                string sql = "UPDATE Usuario SET IdTipoUsuario=@idTipo, Nome=@nome, Email=@email, Senha=@senha, Status=@status WHERE IdUsuario=@idUsuario";
                 command = new SqlCommand(sql, conexao);
 
                 command.Parameters.AddWithValue("@idTipo", usuario.IdTipoUsuario);
@@ -194,7 +194,7 @@ namespace ClinicaEstetica.DAL
                 Conectar();
                 transacao = conexao.BeginTransaction();
 
-                using (SqlCommand cmd1 = new SqlCommand(@"DELETE FROM AgendamentoServico WHERE IdAgendamento IN(SELECT IdAgendamento WHERE IdUsuarioCadastro=@id)", conexao, transacao))
+                using (SqlCommand cmd1 = new SqlCommand(@"DELETE FROM AgendamentoServico WHERE IdAgendamento IN(SELECT IdAgendamento FROM Agendamento WHERE IdUsuarioCadastro=@id)", conexao, transacao))
 
                 {
                     cmd1.Parameters.AddWithValue("@id", id);
